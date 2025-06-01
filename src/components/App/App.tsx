@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import ReactPaginate from "react-paginate";
@@ -34,15 +34,18 @@ export default function App() {
     setPage(1);
   };
 
+  useEffect(() => {
+    if (isSuccess && movies.length === 0) {
+      toast.error("No movies found for your request.");
+    }
+  }, [isSuccess, movies.length]);
+
   return (
     <>
       <Toaster />
       <SearchBar onSubmit={handleSubmit} />
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
-      {isSuccess &&
-        movies.length === 0 &&
-        toast.error("No movies found for your request.")}
 
       {isSuccess && movies.length > 0 && (
         <>
